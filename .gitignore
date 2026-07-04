@@ -1,0 +1,12 @@
+/dist/
+/node_modules/
+/.nuxt/
+/.output/
+/coverage/
+*.log
+*.tmp
+*.cache
+*.tgz
+.env
+.env.*
+!.env.example

@@ -1,0 +1,87 @@
+{
+  "name": "ddys-nuxt",
+  "version": "0.1.0",
+  "description": "Official Nuxt module for the DDYS API with composables, components, Nitro routes, caching, SEO helpers, diagnostics, and request form.",
+  "type": "module",
+  "license": "MIT",
+  "homepage": "https://www.npmjs.com/package/ddys-nuxt",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ddysiodev/ddys-nuxt.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ddysiodev/ddys-nuxt/issues"
+  },
+  "keywords": [
+    "ddys",
+    "nuxt",
+    "nuxt-module",
+    "vue",
+    "nitro",
+    "movies",
+    "video",
+    "api",
+    "seo"
+  ],
+  "exports": {
+    ".": {
+      "types": "./src/module.ts",
+      "import": "./src/module.ts"
+    },
+    "./client": {
+      "types": "./src/runtime/client/index.ts",
+      "import": "./src/runtime/client/index.ts"
+    },
+    "./server": {
+      "types": "./src/runtime/server/index.ts",
+      "import": "./src/runtime/server/index.ts"
+    },
+    "./types": {
+      "types": "./src/runtime/types/ddys.ts",
+      "import": "./src/runtime/types/ddys.ts"
+    },
+    "./styles.css": "./src/runtime/styles/ddys.css"
+  },
+  "main": "./src/module.ts",
+  "module": "./src/module.ts",
+  "types": "./src/module.ts",
+  "files": [
+    "src",
+    "examples",
+    "public",
+    "README.md",
+    "README.zh-CN.md",
+    "LICENSE",
+    ".env.example",
+    "nuxt.config.example.ts"
+  ],
+  "sideEffects": [
+    "./src/runtime/styles/ddys.css",
+    "./src/runtime/plugin.ts"
+  ],
+  "peerDependencies": {
+    "nuxt": ">=3.12.0 || >=4.0.0",
+    "vue": ">=3.4.0"
+  },
+  "dependencies": {
+    "@nuxt/kit": "^4.0.0",
+    "h3": "^1.13.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "nuxt": "^4.0.0",
+    "typescript": "^5.7.0",
+    "vue": "^3.5.0"
+  },
+  "scripts": {
+    "check": "node tools/check.mjs",
+    "test": "node tools/check.mjs && node --test tests/*.test.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=18.18.0"
+  }
+}

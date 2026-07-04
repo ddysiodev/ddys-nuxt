@@ -1,0 +1,209 @@
+.ddys-nuxt {
+  color: inherit;
+}
+
+.ddys-nuxt-items {
+  display: grid;
+  grid-template-columns: repeat(var(--ddys-nuxt-columns, 4), minmax(0, 1fr));
+  gap: 18px;
+}
+
+.ddys-nuxt-layout-list .ddys-nuxt-items {
+  grid-template-columns: 1fr;
+}
+
+.ddys-nuxt-card {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  gap: 14px;
+  min-width: 0;
+  border: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+  border-radius: 8px;
+  padding: 12px;
+  background: color-mix(in srgb, canvas 94%, currentColor 6%);
+}
+
+.ddys-nuxt-poster-link {
+  display: block;
+  min-width: 0;
+}
+
+.ddys-nuxt-poster {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  border-radius: 6px;
+  background: #111827;
+}
+
+.ddys-nuxt-poster-empty {
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-weight: 700;
+}
+
+.ddys-nuxt-card-body {
+  min-width: 0;
+}
+
+.ddys-nuxt-title {
+  margin: 0 0 6px;
+  font-size: 1rem;
+  line-height: 1.35;
+}
+
+.ddys-nuxt-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.ddys-nuxt-title a:hover {
+  text-decoration: underline;
+}
+
+.ddys-nuxt-meta,
+.ddys-nuxt-summary,
+.ddys-nuxt-description,
+.ddys-nuxt-status,
+.ddys-nuxt-empty {
+  margin: 0;
+  color: color-mix(in srgb, currentColor 72%, transparent);
+  line-height: 1.55;
+}
+
+.ddys-nuxt-summary {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.ddys-nuxt-detail {
+  display: grid;
+  gap: 18px;
+}
+
+.ddys-nuxt-sources,
+.ddys-nuxt-related {
+  display: grid;
+  gap: 12px;
+}
+
+.ddys-nuxt-source-group {
+  border-top: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+  padding-top: 12px;
+}
+
+.ddys-nuxt-source-group h3,
+.ddys-nuxt-related h2 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+}
+
+.ddys-nuxt-resource {
+  margin: 4px 0;
+  word-break: break-all;
+}
+
+.ddys-nuxt-search,
+.ddys-nuxt-request-form {
+  display: grid;
+  gap: 10px;
+}
+
+.ddys-nuxt-search {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.ddys-nuxt-search input,
+.ddys-nuxt-request-form input,
+.ddys-nuxt-request-form textarea,
+.ddys-nuxt-request-form select {
+  width: 100%;
+  min-height: 40px;
+  box-sizing: border-box;
+  border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  border-radius: 6px;
+  padding: 8px 10px;
+  background: transparent;
+  color: inherit;
+}
+
+.ddys-nuxt-request-form textarea {
+  min-height: 108px;
+  resize: vertical;
+}
+
+.ddys-nuxt-search button,
+.ddys-nuxt-request-form button,
+.ddys-nuxt-actions button {
+  min-height: 40px;
+  border: 0;
+  border-radius: 6px;
+  padding: 8px 14px;
+  background: #0f766e;
+  color: #fff;
+  cursor: pointer;
+}
+
+.ddys-nuxt-search button:disabled,
+.ddys-nuxt-request-form button:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+.ddys-nuxt-honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.ddys-nuxt-diagnostics {
+  display: grid;
+  gap: 12px;
+}
+
+.ddys-nuxt-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.ddys-nuxt-diagnostics pre {
+  overflow: auto;
+  max-height: 520px;
+  border-radius: 8px;
+  padding: 12px;
+  background: #111827;
+  color: #f9fafb;
+}
+
+.ddys-nuxt-status.is-error {
+  color: #dc2626;
+}
+
+@media (max-width: 860px) {
+  .ddys-nuxt-items {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .ddys-nuxt-items,
+  .ddys-nuxt-search {
+    grid-template-columns: 1fr;
+  }
+
+  .ddys-nuxt-card {
+    grid-template-columns: 88px minmax(0, 1fr);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .ddys-nuxt-theme-auto .ddys-nuxt-card {
+    background: color-mix(in srgb, #111827 86%, white 14%);
+  }
+}
