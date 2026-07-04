@@ -1,4 +1,4 @@
-import { addComponentsDir, addImportsDir, addPlugin, addServerHandler, createResolver, defineNuxtModule } from '@nuxt/kit';
+import { addComponentsDir, addImportsDir, addPlugin, addServerHandler, addTypeTemplate, createResolver, defineNuxtModule } from '@nuxt/kit';
 import { DEFAULT_DDYS_CONFIG, type DdysConfigInput, configFromEnv, normalizeRoutePrefix, publicDdysConfig } from './runtime/config';
 
 export interface ModuleOptions extends DdysConfigInput {
@@ -54,14 +54,34 @@ export default defineNuxtModule<ModuleOptions>({
       pathPrefix: false,
       global: options.globalComponents !== false
     });
-    addPlugin(resolver.resolve('runtime/plugin'));
+    addTypeTemplate({
+      filename: 'types/ddys-nuxt.d.ts',
+      getContents: () => [
+        "import type { DdysProxyClient } from 'ddys-nuxt/client';",
+        '',
+        "declare module '#app' {",
+        '  interface NuxtApp {',
+        '    $ddys: DdysProxyClient;',
+        '  }',
+        '}',
+        '',
+        "declare module 'vue' {",
+        '  interface ComponentCustomProperties {',
+        '    $ddys: DdysProxyClient;',
+        '  }',
+        '}',
+        '',
+        'export {};'
+      ].join('\n')
+    });
+    addPlugin(resolver.resolve('runtime/plugin.mjs'));
 
-    addServerHandler({ route: `${routePrefix}/proxy`, method: 'get', handler: resolver.resolve('runtime/server/api/proxy.get') });
-    addServerHandler({ route: `${routePrefix}/request`, method: 'get', handler: resolver.resolve('runtime/server/api/request.get') });
-    addServerHandler({ route: `${routePrefix}/request`, method: 'post', handler: resolver.resolve('runtime/server/api/request.post') });
-    addServerHandler({ route: `${routePrefix}/diagnostics`, method: 'get', handler: resolver.resolve('runtime/server/api/diagnostics.get') });
-    addServerHandler({ route: `${routePrefix}/diagnostics`, method: 'post', handler: resolver.resolve('runtime/server/api/diagnostics.post') });
-    addServerHandler({ route: `${routePrefix}/revalidate`, method: 'post', handler: resolver.resolve('runtime/server/api/revalidate.post') });
+    addServerHandler({ route: `${routePrefix}/proxy`, method: 'get', handler: resolver.resolve('runtime/server/api/proxy.get.mjs') });
+    addServerHandler({ route: `${routePrefix}/request`, method: 'get', handler: resolver.resolve('runtime/server/api/request.get.mjs') });
+    addServerHandler({ route: `${routePrefix}/request`, method: 'post', handler: resolver.resolve('runtime/server/api/request.post.mjs') });
+    addServerHandler({ route: `${routePrefix}/diagnostics`, method: 'get', handler: resolver.resolve('runtime/server/api/diagnostics.get.mjs') });
+    addServerHandler({ route: `${routePrefix}/diagnostics`, method: 'post', handler: resolver.resolve('runtime/server/api/diagnostics.post.mjs') });
+    addServerHandler({ route: `${routePrefix}/revalidate`, method: 'post', handler: resolver.resolve('runtime/server/api/revalidate.post.mjs') });
 
     nuxtOptions.routeRules ||= {};
     nuxtOptions.routeRules[`${routePrefix}/proxy`] = {

@@ -60,6 +60,7 @@ const requiredFiles = [
   'public/images/logo.png',
   'tests/structure.test.mjs',
   'tools/build-package.ps1',
+  'tools/build-dist.mjs',
   'tools/check.mjs'
 ];
 
@@ -135,7 +136,10 @@ async function checkPackage() {
   assert(pkg.name === 'ddys-nuxt', 'package name mismatch.');
   assert(pkg.type === 'module', 'package must be ESM.');
   assert(pkg.publishConfig?.access === 'public', 'package must be public publishable.');
-  assert(pkg.exports?.['.'] && pkg.exports?.['./client'] && pkg.exports?.['./server'] && pkg.exports?.['./types'] && pkg.exports?.['./styles.css'], 'package exports must expose module, client, server, types, and styles.');
+  assert(pkg.exports?.['.']?.import === './dist/module.mjs' && pkg.exports?.['./client']?.import?.startsWith('./dist/') && pkg.exports?.['./server']?.import?.startsWith('./dist/') && pkg.exports?.['./types'] && pkg.exports?.['./styles.css'] === './dist/runtime/styles/ddys.css', 'package exports must expose built module, client, server, types, and styles.');
+  assert(pkg.files?.includes('dist') && pkg.files?.includes('src'), 'package must publish built dist files and source types.');
+  assert(pkg.sideEffects?.includes('./dist/runtime/styles/ddys.css') && pkg.sideEffects?.includes('./dist/runtime/plugin.mjs'), 'package must preserve built runtime side effects.');
+  assert(pkg.scripts?.build === 'node tools/build-dist.mjs' && pkg.scripts?.prepack === 'node tools/build-dist.mjs', 'package must build dist before pack.');
   assert(pkg.peerDependencies?.nuxt && pkg.peerDependencies?.vue, 'package must declare Nuxt and Vue peer dependencies.');
   assert(pkg.dependencies?.['@nuxt/kit'] && pkg.dependencies?.h3, 'package must depend on @nuxt/kit and h3.');
   assert(pkg.scripts?.check === 'node tools/check.mjs', 'package check script mismatch.');
@@ -143,10 +147,11 @@ async function checkPackage() {
 
 async function checkModule() {
   const mod = await read('src/module.ts');
-  for (const fragment of ['defineNuxtModule', 'addImportsDir', 'addComponentsDir', 'addServerHandler', 'addPlugin', 'runtimeConfig', 'publicAssets', 'routeRules']) {
+  for (const fragment of ['defineNuxtModule', 'addImportsDir', 'addComponentsDir', 'addServerHandler', 'addTypeTemplate', 'addPlugin', 'runtimeConfig', 'publicAssets', 'routeRules']) {
     assert(mod.includes(fragment), `module missing ${fragment}.`);
   }
-  assert(mod.includes('DEFAULT_DDYS_CONFIG.routePrefix') && mod.includes('runtime/server/api/request.post') && mod.includes('runtime/server/api/diagnostics.post') && mod.includes('runtime/server/api/revalidate.post'), 'module must register all Nitro routes.');
+  assert(mod.includes("types/ddys-nuxt.d.ts") && mod.includes("ddys-nuxt/client") && mod.includes('$ddys'), 'module must register Nuxt app injection types.');
+  assert(mod.includes('DEFAULT_DDYS_CONFIG.routePrefix') && mod.includes('runtime/server/api/request.post.mjs') && mod.includes('runtime/server/api/diagnostics.post.mjs') && mod.includes('runtime/server/api/revalidate.post.mjs'), 'module must register all built Nitro routes.');
 }
 
 async function checkClient() {
@@ -230,6 +235,8 @@ async function checkDocs() {
 async function checkBuildScript() {
   const script = await read('tools/build-package.ps1');
   assert(script.includes('ddys-nuxt-v{0}.zip') && script.includes('StartsWith($resolvedRoot') && script.includes('ZipFileExtensions') && script.includes('Replace("\\", "/")'), 'build-package.ps1 must safely create portable release zip.');
+  const build = await read('tools/build-dist.mjs');
+  assert(build.includes('transpileModule') && build.includes('rewriteImports') && build.includes('.mjs') && build.includes('.d.ts'), 'build-dist.mjs must create ESM dist output and skip declaration files.');
 }
 
 async function checkForbiddenFiles() {
@@ -259,7 +266,7 @@ async function listFiles(dir) {
   const entries = await fs.readdir(dir, { withFileTypes: true });
   const out = [];
   for (const entry of entries) {
-    if (['.git', 'dist', 'node_modules', '.nuxt', '.output', 'coverage'].includes(entry.name)) continue;
+    if (['.git', 'dist', 'node_modules', '.nuxt', '.output', 'coverage'].includes(entry.name) || entry.name === 'pnpm-lock.yaml') continue;
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) out.push(...await listFiles(full));
     else out.push(full);

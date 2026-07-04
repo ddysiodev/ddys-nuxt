@@ -1,6 +1,6 @@
 {
   "name": "ddys-nuxt",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Official Nuxt module for the DDYS API with composables, components, Nitro routes, caching, SEO helpers, diagnostics, and request form.",
   "type": "module",
   "license": "MIT",
@@ -29,26 +29,27 @@
   "exports": {
     ".": {
       "types": "./src/module.ts",
-      "import": "./src/module.ts"
+      "import": "./dist/module.mjs"
     },
     "./client": {
       "types": "./src/runtime/client/index.ts",
-      "import": "./src/runtime/client/index.ts"
+      "import": "./dist/runtime/client/index.mjs"
     },
     "./server": {
       "types": "./src/runtime/server/index.ts",
-      "import": "./src/runtime/server/index.ts"
+      "import": "./dist/runtime/server/index.mjs"
     },
     "./types": {
       "types": "./src/runtime/types/ddys.ts",
-      "import": "./src/runtime/types/ddys.ts"
+      "import": "./dist/runtime/types/ddys.mjs"
     },
-    "./styles.css": "./src/runtime/styles/ddys.css"
+    "./styles.css": "./dist/runtime/styles/ddys.css"
   },
-  "main": "./src/module.ts",
-  "module": "./src/module.ts",
+  "main": "./dist/module.mjs",
+  "module": "./dist/module.mjs",
   "types": "./src/module.ts",
   "files": [
+    "dist",
     "src",
     "examples",
     "public",
@@ -59,6 +60,8 @@
     "nuxt.config.example.ts"
   ],
   "sideEffects": [
+    "./dist/runtime/styles/ddys.css",
+    "./dist/runtime/plugin.mjs",
     "./src/runtime/styles/ddys.css",
     "./src/runtime/plugin.ts"
   ],
@@ -77,7 +80,9 @@
     "vue": "^3.5.0"
   },
   "scripts": {
+    "build": "node tools/build-dist.mjs",
     "check": "node tools/check.mjs",
+    "prepack": "node tools/build-dist.mjs",
     "test": "node tools/check.mjs && node --test tests/*.test.mjs",
     "typecheck": "tsc --noEmit"
   },
