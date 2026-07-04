@@ -61,7 +61,9 @@ export type DdysConfigInput = Partial<Omit<DdysConfig, 'cache' | 'proxy' | 'requ
   security?: Partial<DdysSecurityConfig>;
 };
 
-export const DDYS_NUXT_VERSION = '0.1.2';
+type DdysRuntimeEnv = Record<string, string | undefined>;
+
+export const DDYS_NUXT_VERSION = '0.1.3';
 
 export const DEFAULT_DDYS_CONFIG: DdysConfig = {
   apiBaseUrl: 'https://ddys.io/api/v1',
@@ -125,7 +127,7 @@ export function mergeDdysConfig(input: DdysConfigInput = {}): DdysConfig {
   };
 }
 
-export function configFromEnv(input: DdysConfigInput = {}, env: Record<string, string | undefined> = process.env): DdysConfig {
+export function configFromEnv(input: DdysConfigInput = {}, env: DdysRuntimeEnv = runtimeEnv()): DdysConfig {
   const envConfig: DdysConfigInput = {
     apiBaseUrl: env.DDYS_API_BASE_URL,
     siteBaseUrl: env.DDYS_SITE_BASE_URL,
@@ -168,6 +170,11 @@ export function publicDdysConfig(config: DdysConfig) {
       enabled: config.diagnostics.enabled
     }
   };
+}
+
+function runtimeEnv(): DdysRuntimeEnv {
+  const runtime = globalThis as typeof globalThis & { process?: { env?: DdysRuntimeEnv } };
+  return runtime.process?.env || {};
 }
 
 export function safeDdysConfig(config: DdysConfig) {
