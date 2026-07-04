@@ -61,7 +61,7 @@ export type DdysConfigInput = Partial<Omit<DdysConfig, 'cache' | 'proxy' | 'requ
   security?: Partial<DdysSecurityConfig>;
 };
 
-export const DDYS_NUXT_VERSION = '0.1.0';
+export const DDYS_NUXT_VERSION = '0.1.1';
 
 export const DEFAULT_DDYS_CONFIG: DdysConfig = {
   apiBaseUrl: 'https://ddys.io/api/v1',

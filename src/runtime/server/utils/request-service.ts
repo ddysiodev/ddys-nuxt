@@ -12,6 +12,7 @@ export interface DdysRequestSubmitOptions {
 const lastRequestByIdentity = new Map<string, number>();
 
 export async function createRequestFormToken(config: DdysConfig, identity = 'anonymous', now = Date.now()): Promise<string> {
+  if (!config.requestForm.enabled) return '';
   if (!config.requestForm.csrf) return '';
   const secret = config.requestForm.secret || config.apiKey;
   if (!secret) throw new Error('DDYS_FORM_SECRET or DDYS_API_KEY is required for request form tokens.');

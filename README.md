@@ -63,6 +63,13 @@ Available composables:
 - `useDdysSeo`
 - `useDdysMovieSeo`
 
+The module also injects a typed Nuxt app helper:
+
+```ts
+const { $ddys } = useNuxtApp();
+const hot = await $ddys.hot({ limit: 12 });
+```
+
 ## Components
 
 ```vue
@@ -120,7 +127,7 @@ DDYS_FORM_SECRET=...
 DDYS_REQUEST_FORM_ENABLED=true
 ```
 
-The request route validates title, year, type, Douban ID, IMDb ID, honeypot, form token, and per-identity rate limit before using the authenticated DDYS API.
+The request route validates title, year, type, Douban ID, IMDb ID, honeypot, form token, and per-identity rate limit before using the authenticated DDYS API. When the request form is disabled, the token endpoint returns an empty token and does not require `DDYS_FORM_SECRET`.
 
 ## SEO And PWA
 

@@ -20,6 +20,7 @@ const requiredFiles = [
   'src/runtime/plugin.ts',
   'src/runtime/types/ddys.ts',
   'src/runtime/types/nuxt-shims.d.ts',
+  'src/runtime/types/nuxt.d.ts',
   'src/runtime/utils/security.ts',
   'src/runtime/utils/display.ts',
   'src/runtime/client/client.ts',
@@ -169,6 +170,7 @@ async function checkServer() {
   for (const fragment of ['createRequestFormToken', 'verifyRequestFormToken', 'crypto.subtle', 'enforceRateLimit', 'normalizeRequestInput', 'honeypot', 'DDYS request form is disabled']) {
     assert(request.includes(fragment), `request service missing ${fragment}.`);
   }
+  assert(request.includes('!config.requestForm.enabled') && request.includes("return '';"), 'request token helper must be safe when request form is disabled.');
   const diagnostics = await read('src/runtime/server/api/diagnostics.get.ts');
   assert(diagnostics.includes('safeEventConfig') && diagnostics.includes('diagnostics.enabled') && diagnostics.includes('composables'), 'diagnostics route must hide secrets and report capabilities.');
   const revalidate = await read('src/runtime/server/api/revalidate.post.ts');
@@ -182,6 +184,8 @@ async function checkComposablesAndComponents() {
     const text = await read(`src/runtime/composables/${file}`);
     assert(text.includes('export function'), `${file} must export a composable.`);
   }
+  const nuxtTypes = await read('src/runtime/types/nuxt.d.ts');
+  assert(nuxtTypes.includes('NuxtApp') && nuxtTypes.includes('$ddys') && nuxtTypes.includes('ComponentCustomProperties'), 'Nuxt app injection must be typed.');
   for (const component of ['DdysCard', 'DdysGrid', 'DdysMovieDetail', 'DdysSources', 'DdysView', 'DdysSearch', 'DdysRequestForm', 'DdysDiagnostics']) {
     const text = await read(`src/runtime/components/${component}.vue`);
     assert(text.includes('<template>') && text.includes('<script setup'), `${component} must be a Vue SFC.`);

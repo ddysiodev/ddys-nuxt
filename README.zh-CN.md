@@ -63,6 +63,13 @@ const latest = await ddys.latest({ limit: 12 });
 - `useDdysSeo`
 - `useDdysMovieSeo`
 
+模块也会注入带类型的 Nuxt app helper：
+
+```ts
+const { $ddys } = useNuxtApp();
+const hot = await $ddys.hot({ limit: 12 });
+```
+
 ## 组件
 
 ```vue
@@ -120,7 +127,7 @@ DDYS_FORM_SECRET=...
 DDYS_REQUEST_FORM_ENABLED=true
 ```
 
-求片路由会在调用低端影视认证 API 前校验标题、年份、类型、豆瓣 ID、IMDb ID、蜜罐字段、表单 token 和单身份提交频率。
+求片路由会在调用低端影视认证 API 前校验标题、年份、类型、豆瓣 ID、IMDb ID、蜜罐字段、表单 token 和单身份提交频率。求片表单关闭时，token 接口会返回空 token，不要求配置 `DDYS_FORM_SECRET`。
 
 ## SEO 与 PWA
 
